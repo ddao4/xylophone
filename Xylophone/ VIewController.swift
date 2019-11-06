@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import AVFoundation
 
-class ViewController: UIViewController{
+class ViewController: UIViewController, AVAudioPlayerDelegate {
+
+    var audioPlayer : AVAudioPlayer!
+    let soundArray = ["note1", "note2", "note3", "note4", "note5", "note6", "note7"]
     
 
     override func viewDidLoad() {
@@ -18,9 +22,28 @@ class ViewController: UIViewController{
 
 
     @IBAction func notePressed(_ sender: UIButton) {
+      
+        playSound(soundFileName : soundArray[sender.tag - 1])
+        sender.alpha = 0.50
+    
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // Change `2.0` to the desired number of seconds.
+           // Code you want to be delayed
+            sender.alpha = 1
+         
+        }
         
+    }
+    
+    func playSound(soundFileName : String) {
+        let soundURL = Bundle.main.url(forResource: soundFileName, withExtension: "wav")
         
+        do {
+            try audioPlayer = AVAudioPlayer(contentsOf: soundURL!)
+        } catch {
+            print(error)
+        }
         
+        audioPlayer.play()
     }
     
   
